@@ -3,7 +3,6 @@ package millionaire
 import (
 	"github.com/ffddz/upside-homework/crypto/paillier"
 	"math/big"
-	"fmt"
 )
 
 type Party1 struct {
@@ -40,10 +39,6 @@ func (p Party1) Step2(c1, c2 *big.Int) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-
-	fmt.Println("DEBUG: Decrypted b1Balance =", b1Balance)
-    fmt.Println("DEBUG: Decrypted b2Balance =", b2Balance)
-	fmt.Println("DEBUG: result =", b1Balance.Cmp(b2Balance))
 
 	return b1Balance.Cmp(b2Balance), nil
 }
