@@ -3,7 +3,6 @@ package elgamal
 import (
 	"crypto/rand"
 	"errors"
-	"fmt"
 	"math/big"
 )
 
@@ -47,5 +46,16 @@ func (eg *ElGamal) Encrypt(m, pk *big.Int) (*big.Int, *big.Int, error) {
 
 // TODO Decrypt 개인 키를 사용하여 암호문 (c1, c2)을 복호화
 func (eg *ElGamal) Decrypt(c1, c2 *big.Int) (*big.Int, error) {
-	return nil, fmt.Errorf("not implemented")
+	
+	s := new(big.Int).Exp(c1, eg.x, eg.p) // s = pk^k mod p = c1^x mod p, pk = g^x mod p
+
+	sInv := new(big.Int).ModInverse(s, eg.p) // sInv = s^-1 mod p
+	if sInv == nil {
+		return nil, errors.New("modular inverse does not exist")
+	}
+
+	m := new(big.Int).Mul(c2, sInv) // 복호화: m = c2 * s^-1 mod p
+	m.Mod(m, eg.p)
+
+	return m, nil
 }
