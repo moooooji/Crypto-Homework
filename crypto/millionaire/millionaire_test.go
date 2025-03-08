@@ -29,7 +29,7 @@ func TestMillionaire(t *testing.T) {
 		{
 			name:          "백만장자 문제 - party1이 123456789원, party2가 123456788원을 가지고 있을 때",
 			party1Balance: big.NewInt(123456789),
-			party2Balance: big.NewInt(12345678),
+			party2Balance: big.NewInt(123456788),
 			expected:      1,
 		},
 	}
