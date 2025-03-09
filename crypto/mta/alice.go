@@ -1,9 +1,9 @@
 package mta
 
 import (
-	"fmt"
 	"github.com/ffddz/upside-homework/crypto"
 	"math/big"
+	"fmt"
 )
 
 // Alice MtA 프로토콜에서의 Alice, 1 out of 2 OT의 Receiver
@@ -54,5 +54,32 @@ func (alice *Alice) Step1(otAList []*big.Int) []*big.Int {
 
 // TODO Step2 Bob으로부터 암호화된 메시지를 받아 a의 비트에 따라 복호화하고 x를 계산
 func (alice *Alice) Step2(c0List, c1List, nonceK0List, nonceK1List [][]byte) (*big.Int, error) {
-	return nil, fmt.Errorf("not implemented")
+    x := big.NewInt(0) // 최종 x 값
+
+    for i := 0; i < alice.rho; i++ {
+        var decryptKey []byte
+        var ciphertext []byte
+        var nonce []byte
+
+        // Alice가 선택한 비트 a_i를 확인
+        if alice.a.Bit(i) == 0 {
+            decryptKey = crypto.HashBigInt(alice.otKrList[i]) // 복호화 키
+            ciphertext = c0List[i] // t_i^0
+            nonce = nonceK0List[i] // nonce
+        } else {
+            decryptKey = crypto.HashBigInt(alice.otKrList[i]) // 복호화 키
+            ciphertext = c1List[i] // t_i^1
+            nonce = nonceK1List[i] // nonce
+        }
+
+        decryptedValue, err := crypto.DecryptBigInt(decryptKey, nonce, ciphertext)
+        if err != nil {
+            return nil, fmt.Errorf("decryption failed at index %d: %w", i, err)
+        }
+
+        x.Add(x, decryptedValue)
+        x.Mod(x, alice.p) // 모듈러 연산 적용
+    }
+
+    return x, nil
 }
