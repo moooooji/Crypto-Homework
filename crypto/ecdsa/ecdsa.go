@@ -5,6 +5,7 @@ import (
 	"github.com/decred/dcrd/dcrec/secp256k1/v4"
 	"github.com/ffddz/upside-homework/crypto"
 	"math/big"
+	"fmt"
 )
 
 var (
@@ -16,6 +17,7 @@ var (
 
 func Sign(privateKey *secp256k1.PrivateKey, hash []byte) (*big.Int, *big.Int, error) {
 	privkey := privateKey.ToECDSA()
+	fmt.Println("3. Recovered Private Key: ", privkey)
 	N := order
 	inv := new(big.Int).ModInverse(k, N)
 	r, _ := privkey.Curve.ScalarBaseMult(k.Bytes())

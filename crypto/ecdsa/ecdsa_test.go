@@ -5,6 +5,7 @@ import (
 	"github.com/decred/dcrd/dcrec/secp256k1/v4"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"fmt"
 )
 
 func TestAttackGetPrivateKey(t *testing.T) {
@@ -12,6 +13,8 @@ func TestAttackGetPrivateKey(t *testing.T) {
 		// private key 생성
 		privateKey, err := secp256k1.GeneratePrivateKey()
 		assert.NoError(t, err)
+
+		fmt.Println("1. Recovered Private Key: ", privateKey)
 
 		// 서명 생성
 		msg1 := []byte("hello, world!")
